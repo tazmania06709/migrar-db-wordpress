@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  # MYSQL Database
+  database:
+    image: mysql:8.0
+    volumes: 
+      - db_data:/var/lib/mysql      
+    restart: always
+    # command: --default-authentication-plugin=mysql_native_password
+    environment:       
+      SOURCE_DB_NAME: ${SOURCE_DB_NAME}
+      SOURCE_DB_USER: ${SOURCE_DB_USER}
+      SOURCE_DB_PASSWORD: ${SOURCE_DB_PASSWORD}
+      WP_DB_NAME: ${WP_DB_NAME}
+      WP_DB_USER: ${SOURCE_DB_USER}
+      WP_DB_PASSWORD: ${SOURCE_DB_PASSWORD}      
+    networks: 
+      - wpsite
+networks:
+  wpsite:
+volumes:
+  db_data:
