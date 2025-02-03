@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { MigrationsService } from './migrations.service';
 // import { CreateMigrationDto } from './dto/create-migration.dto';
 // import { UpdateMigrationDto } from './dto/update-migration.dto';
@@ -27,8 +27,8 @@ export class MigrationsController {
   //   return this.migrationsService.update(+id, updateMigrationDto);
   // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.migrationsService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.migrationsService.remove(+id);
+  // }
 }
