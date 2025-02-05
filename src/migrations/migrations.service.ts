@@ -33,9 +33,8 @@ export class MigrationsService {
       if (!inmueble.length) {
         throw new Error('Inmueble no encontrado');
       }
-      const inmuebleComplete = await this.sourceDb.query(
-        `
-            SELECT 
+      const resultQuery = await this.sourceDb.query(
+        `SELECT 
                 i.id, 
                 i.referencia, 
                 i.codigo, 
@@ -49,12 +48,12 @@ export class MigrationsService {
                 CASE WHEN i.garage = 1 THEN "Sí" ELSE "No" END AS garage,
                 CASE WHEN i.telefono = 1 THEN "Sí" ELSE "No" END AS telefono,
                 rg.regimen AS regimen,  
-                i.precio, 
-                i.titulo,
+                i.precio,
                 i.descripcion, 
                 i.fabricacion, 
                 i.imagenPortada,
                 CASE WHEN i.publicado = 1 THEN "Publicado" ELSE "No Publicado" END AS publicado
+                -- Subconsulta para obtener las partes                
             FROM inmueble i 
             LEFT JOIN tipoinmueble t ON i.tipo = t.id 
             LEFT JOIN provincia p ON i.provincia = p.id
@@ -71,8 +70,30 @@ export class MigrationsService {
         [id],
       );
 
-      const data = inmueble[0]; // Obtener el primer resultado
-      console.log(data, 'data');
+      const partesInmueble = await this.sourceDb.query(
+        `SELECT 
+            parte.id AS parteId,
+            parte.parte AS parteNombre,
+            pi.cantidad,
+            pi.largo,
+            pi.ancho,
+            pi.altura,
+            pi.descripcion
+        FROM parteinmueble pi
+        INNER JOIN partes parte ON pi.parte = parte.id
+        WHERE pi.inmueble = ?
+        `,
+        [id],
+      );
+      // console.log(resultQuery, 'inmueble', partesInmueble, 'Partes');
+
+      //const data = inmueble[0]; // Obtener el primer resultado
+      const inmuebleComplete = {
+        ...resultQuery[0],
+        partes: partesInmueble,
+      };
+
+      console.log(inmuebleComplete, 'data');
 
       // Insertar en la base de datos de WordPress
       // const insertQuery = `
