@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Post } from '@nestjs/common';
 import { MigrationsService } from './migrations.service';
 // import { CreateMigrationDto } from './dto/create-migration.dto';
 // import { UpdateMigrationDto } from './dto/update-migration.dto';
@@ -11,6 +11,11 @@ export class MigrationsController {
   // create(@Body() createMigrationDto: CreateMigrationDto) {
   //   return this.migrationsService.create(createMigrationDto);
   // }
+
+  @Get('properties')
+  async migrateInmuebles() {
+    return await this.migrationsService.getInmuebles();
+  }
 
   @Get()
   findAll() {
@@ -31,4 +36,17 @@ export class MigrationsController {
   // remove(@Param('id') id: string) {
   //   return this.migrationsService.remove(+id);
   // }
+
+  @Post('province')
+  async migrateProvince() {
+    return this.migrationsService.insertProvince();
+  }
+  @Post('municipalities')
+  async migrateMunicipalities() {
+    return this.migrationsService.insertMunicipalities();
+  }
+  @Post('neighborhood')
+  async migrateNeighborhood() {
+    return this.migrationsService.insertNeighborhood();
+  }
 }
