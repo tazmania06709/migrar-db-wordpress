@@ -138,15 +138,16 @@ export class MigrationsService {
         `SELECT 
                 i.id, 
                 i.referencia, 
-                i.codigo, 
+                i.codigo,
+                t.tipo AS tipo,
                 p.nombre AS provincia,
                 m.nombre AS municipio, 
                 r.nombre AS reparto, 
-                s.situado AS situacion,
-                e.estado AS estadoConstruccion, 
+                s.situado AS situado,
+                e.estado AS estadoConstruccion,
+                tg.garage AS tipogarage,
                 i.superficie,               
-                CASE WHEN i.ascensor = 1 THEN "Sí" ELSE "No" END AS ascensor,
-                CASE WHEN i.garage = 1 THEN "Sí" ELSE "No" END AS garage,
+                CASE WHEN i.ascensor = 1 THEN "Sí" ELSE "No" END AS ascensor,                
                 CASE WHEN i.telefono = 1 THEN "Sí" ELSE "No" END AS telefono,
                 rg.regimen AS regimen,  
                 i.precio,
@@ -161,6 +162,7 @@ export class MigrationsService {
             LEFT JOIN municipio m ON i.municipio = m.id 
             LEFT JOIN reparto r ON i.reparto = r.id
             LEFT JOIN situacion s ON i.situado = s.id 
+            LEFT JOIN tipogarage tg ON i.garage = tg.id 
             LEFT JOIN estadoconstructivo e ON i.estadoConstruccion = e.id
             LEFT JOIN parteinmueble pi ON i.id = pi.inmueble
             LEFT JOIN partes parte ON pi.id = parte.id 
